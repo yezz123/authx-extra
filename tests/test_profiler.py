@@ -54,14 +54,14 @@ class TestProfilerMiddleware:
         stdout_redirect.fp = StringIO()
         temp_stdout, sys.stdout = sys.stdout, stdout_redirect
 
-        request_path = "/tests/output"
+        request_path = "/tests"
         client.get(request_path)
 
         sys.stdout = temp_stdout
         assert f"Path: {request_path}" in stdout_redirect.fp.getvalue()
 
     def test_profiler_export_to_html(self, test_middleware):
-        full_path = f"{os.getcwd()}/tests/output/authx_profiling_results.html"
+        full_path = f"{os.getcwd()}/tests/authx_profiling_results.html"
 
         with TestClient(
             test_middleware(
@@ -78,7 +78,7 @@ class TestProfilerMiddleware:
             assert "profiler.py" in f.read()
 
     def test_profiler_export_to_json(self, test_middleware):
-        full_path = f"{os.getcwd()}/tests/output/authx_profiling_results.json"
+        full_path = f"{os.getcwd()}/tests/authx_profiling_results.json"
 
         with TestClient(
             test_middleware(
@@ -115,7 +115,7 @@ class TestProfilerMiddleware:
         assert "Duration: " in output_text
 
     def test_profiler_output_html(self, test_middleware):
-        full_path = f"{os.getcwd()}/tests/output/authx_profiling_results.html"
+        full_path = f"{os.getcwd()}/tests/authx_profiling_results.html"
 
         with TestClient(
             test_middleware(
@@ -131,7 +131,7 @@ class TestProfilerMiddleware:
             assert "profiler.py" in html_content
 
     def test_profiler_output_json(self, test_middleware):
-        full_path = f"{os.getcwd()}/tests/output/authx_profiling_results.json"
+        full_path = f"{os.getcwd()}/tests/authx_profiling_results.json"
 
         with TestClient(
             test_middleware(
