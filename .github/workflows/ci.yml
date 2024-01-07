@@ -58,7 +58,7 @@ jobs:
         env:
           ENV: test
           REDIS_URL: "redis://0.0.0.0:6379"
-        run: pytest --cov=authx_extra --cov-report=html -xv --color=yes --disable-warnings --cov-fail-under=80
+        run: pytest --cov=authx_extra --cov=tests --cov-report=html -xv --color=yes --disable-warnings --cov-fail-under=80
       - name: Upload coverage
         uses: codecov/codecov-action@v3
 
