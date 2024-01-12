@@ -1,7 +1,9 @@
 from typing import Callable, Optional
 
 import pytz
-from authx._internal import HTTPCache, end_of_day, end_of_week, tz_now, utc
+from authx._internal import end_of_day, end_of_week, tz_now, utc
+
+from authx_extra.extra._cache import HTTPCache
 
 
 class HTTPExpiry:
