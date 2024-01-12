@@ -1,6 +1,6 @@
 from typing import Any, List, Optional
 
-from authx._internal import HTTPCache
+from authx_extra.extra._cache import HTTPCache
 
 
 class HTTPKeys:

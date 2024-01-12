@@ -3,10 +3,11 @@ from functools import wraps
 from typing import Any, Callable, List, Optional, Tuple, Union
 
 import redis
-from authx._internal import HTTPCache, log_error, log_info
+from authx._internal import log_error, log_info
 
 from authx_extra.addons.expiry import HTTPExpiry
 from authx_extra.addons.keys import HTTPKeys
+from authx_extra.extra._cache import HTTPCache
 
 
 class HTTPCacheBackend:
