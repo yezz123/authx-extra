@@ -45,7 +45,7 @@ classifiers = [
 ]
 
 dependencies = [
-    "authx@git+https://github.com/yezz123/authx.git@main",
+    "authx==1.0.0b0",
 ]
 
 dynamic = ["version"]
