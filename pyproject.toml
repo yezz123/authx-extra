@@ -62,16 +62,11 @@ Funding = 'https://github.com/sponsors/yezz123'
 profiler = [
     "pyinstrument>=4.1.1,<4.7.0",
 ]
-oauth2 = [
-    "python-jose>=3.3.0,<4.0.0",
-]
 metrics = [
     "prometheus-client>=0.16.0,<1.0.0",
 ]
 cache = [
-    "python-dateutil>=2.8,<3.0.0",
     "redis>=4.3.3,<5.0.2",
-    "pytz>=2023.3,<2024.0",
 ]
 lint = [
     "pre-commit==3.6.0",

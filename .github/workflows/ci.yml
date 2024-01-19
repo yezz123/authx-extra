@@ -50,8 +50,10 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
+      - name: upgrade pip
+        run: pip install --upgrade pip
       - name: Install Dependencies
-        run: pip install -e .[test,cache,profiler,oauth2,metrics]
+        run: pip install -e .[test,cache,profiler,metrics]
       - name: Freeze dependencies
         run: pip freeze
       - name: Test
