@@ -66,11 +66,11 @@ metrics = [
     "prometheus-client>=0.16.0,<1.0.0",
 ]
 cache = [
-    "redis>=4.3.3,<5.0.3",
+    "redis>=4.3.3,<5.0.4",
 ]
 lint = [
     "pre-commit==3.6.2",
-    "mypy==1.8.0",
+    "mypy==1.9.0",
 ]
 test = [
     "pytest",
