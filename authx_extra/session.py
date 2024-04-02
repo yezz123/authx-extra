@@ -233,7 +233,9 @@ class SessionMiddleware(BaseHTTPMiddleware):
             session_store["__cause__"] = cause
 
         fast_session_obj = SessionIntegration(
-            store=session_store, session_id=session_id, session_save=lambda: self.session_store.save_store(session_id)
+            store=session_store,
+            session_id=session_id,
+            session_save=lambda: self.session_store.save_store(session_id),
         )
         self.logger.info(f"[session_id:'{session_id}'(NEW)] Set session_mgr to request.state.{self.session_object} ")
         setattr(request.state, self.session_object, fast_session_obj)
