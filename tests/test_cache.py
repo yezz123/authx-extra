@@ -31,7 +31,9 @@ async def home(request: Request, response: Response):
 @app.get("/b/logged-in")
 @cache(key="b.logged_in.{}", obj="user", obj_attr="id")
 async def logged_in(request: Request, response: Response, user=user):
-    return JSONResponse({"page": "home", "user": user.id, "datetime": str(datetime.utcnow())})
+    return JSONResponse(
+        {"page": "home", "user": user.id, "datetime": str(datetime.utcnow())}
+    )
 
 
 async def my_ttl_callable():
@@ -41,19 +43,27 @@ async def my_ttl_callable():
 @app.get("/b/ttl_callable")
 @cache(key="b.ttl_callable_expiry", ttl_func=my_ttl_callable)
 async def path_with_ttl_callable(request: Request, response: Response):
-    return JSONResponse({"page": "path_with_ttl_callable", "datetime": str(datetime.utcnow())})
+    return JSONResponse(
+        {"page": "path_with_ttl_callable", "datetime": str(datetime.utcnow())}
+    )
 
 
 @app.post("/b/logged-in")
-@invalidate_cache(key="b.logged_in.{}", obj="user", obj_attr="id", namespace="test_namespace")
+@invalidate_cache(
+    key="b.logged_in.{}", obj="user", obj_attr="id", namespace="test_namespace"
+)
 async def post_logged_in(request: Request, response: Response, user=user):
-    return JSONResponse({"page": "home", "user": user.id, "datetime": str(datetime.utcnow())})
+    return JSONResponse(
+        {"page": "home", "user": user.id, "datetime": str(datetime.utcnow())}
+    )
 
 
 @app.get("/b/profile")
 @cache(key="b.profile.{}", obj="user", obj_attr="id")
 async def logged_in(request: Request, response: Response, user=user):
-    return JSONResponse({"page": "profile", "user": user.id, "datetime": str(datetime.utcnow())})
+    return JSONResponse(
+        {"page": "profile", "user": user.id, "datetime": str(datetime.utcnow())}
+    )
 
 
 @app.post("/b/invalidate_multiple")
@@ -64,7 +74,9 @@ async def logged_in(request: Request, response: Response, user=user):
     namespace="test_namespace",
 )
 async def invalidate_multiple(request: Request, response: Response, user=user):
-    return JSONResponse({"page": "invalidate_multiple", "datetime": str(datetime.utcnow())})
+    return JSONResponse(
+        {"page": "invalidate_multiple", "datetime": str(datetime.utcnow())}
+    )
 
 
 def test_invalidate_multiple():
@@ -146,7 +158,12 @@ def test_with_ttl_callable():
         },
     )
     assert response.headers["Cache-hit"] == "true"
-    assert pytest.approx(redis_client.ttl("test_namespace:b.ttl_callable_expiry"), rel=1e-3) == 3600
+    assert (
+        pytest.approx(
+            redis_client.ttl("test_namespace:b.ttl_callable_expiry"), rel=1e-3
+        )
+        == 3600
+    )
 
 
 def test_home_cached_with_current_user():

@@ -97,11 +97,15 @@ class SessionMiddleware(BaseHTTPMiddleware):
         )
 
         if self.http_only:
-            self.logger.debug(f"[session_id:'{session_id}'] cookie[{self.session_cookie_name}]['httponly'] enabled")
+            self.logger.debug(
+                f"[session_id:'{session_id}'] cookie[{self.session_cookie_name}]['httponly'] enabled"
+            )
             cookie[self.session_cookie_name]["httponly"] = True
 
         if self.secure:
-            self.logger.debug(f"[session_id:'{session_id}'] cookie[{self.session_cookie_name}]['secure'] enabled")
+            self.logger.debug(
+                f"[session_id:'{session_id}'] cookie[{self.session_cookie_name}]['secure'] enabled"
+            )
             cookie[self.session_cookie_name]["secure"] = True
 
         if self.max_age > 0:
@@ -138,19 +142,27 @@ class SessionMiddleware(BaseHTTPMiddleware):
             header_value = header.get("header_value")
             header_names.append(header_name)
 
-            self.logger.debug(f"Use skip_header option. skip_header:'{header_name}':'{header_value}'")
+            self.logger.debug(
+                f"Use skip_header option. skip_header:'{header_name}':'{header_value}'"
+            )
             request_header_value = request.headers.get(header_name)
             self.logger.debug(
                 f"Use skip_header option. Checking request header: '{header_name}':'{request_header_value}'"
             )
-            if (header_value == "*" and request_header_value is not None) or request_header_value == header_value:
+            if (
+                header_value == "*" and request_header_value is not None
+            ) or request_header_value == header_value:
                 self.logger.debug("Use skip_header option. skip_header matched!")
                 return True
 
-        self.logger.debug(f"Use skip_header option. skip_headers:{header_names} not matched in request headers.")
+        self.logger.debug(
+            f"Use skip_header option. skip_headers:{header_names} not matched in request headers."
+        )
         return False
 
-    async def dispatch(self, request: Request, call_next: RequestResponseEndpoint) -> Response:
+    async def dispatch(
+        self, request: Request, call_next: RequestResponseEndpoint
+    ) -> Response:
         """
         Dispatch the request, handling session management.
 
@@ -183,7 +195,9 @@ class SessionMiddleware(BaseHTTPMiddleware):
                     self.logger.info(
                         f"[session_id:'{session_id}'] Session cookie available. But no store for this sessionId found. Maybe store had cleaned."
                     )
-                    cookie = await self.create_new_session_id_and_store(request, cause="valid_cookie_but_no_store")
+                    cookie = await self.create_new_session_id_and_store(
+                        request, cause="valid_cookie_but_no_store"
+                    )
                 else:
                     self.logger.info(
                         f"[session_id:'{session_id}'] Session cookie and Store is available! set session_mgr to reqeust.state.{self.session_object}"
@@ -195,15 +209,21 @@ class SessionMiddleware(BaseHTTPMiddleware):
                         SessionIntegration(
                             store=session_store,
                             session_id=session_id,
-                            session_save=lambda: self.session_store.save_store(session_id),
+                            session_save=lambda: self.session_store.save_store(
+                                session_id
+                            ),
                         ),
                     )
 
                     session_store["__cause__"] = "success"
 
             else:
-                self.logger.info(f"Session cookies available but verification failed! err:{err}")
-                cookie = await self.create_new_session_id_and_store(request, cause=f"renew after {err}")
+                self.logger.info(
+                    f"Session cookies available but verification failed! err:{err}"
+                )
+                cookie = await self.create_new_session_id_and_store(
+                    request, cause=f"renew after {err}"
+                )
 
         response = await call_next(request)
 
@@ -227,15 +247,21 @@ class SessionMiddleware(BaseHTTPMiddleware):
         """
         session_id = str(uuid.uuid4())
         session_store = self.session_store.create_store(session_id)
-        self.logger.debug(f"[session_id:'{session_id}'(NEW)] New session_id and store for session_id created.")
+        self.logger.debug(
+            f"[session_id:'{session_id}'(NEW)] New session_id and store for session_id created."
+        )
 
         if cause is not None:
             session_store["__cause__"] = cause
 
         fast_session_obj = SessionIntegration(
-            store=session_store, session_id=session_id, session_save=lambda: self.session_store.save_store(session_id)
+            store=session_store,
+            session_id=session_id,
+            session_save=lambda: self.session_store.save_store(session_id),
         )
-        self.logger.info(f"[session_id:'{session_id}'(NEW)] Set session_mgr to request.state.{self.session_object} ")
+        self.logger.info(
+            f"[session_id:'{session_id}'(NEW)] Set session_mgr to request.state.{self.session_object} "
+        )
         setattr(request.state, self.session_object, fast_session_obj)
 
         self.session_store.gc()

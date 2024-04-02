@@ -101,8 +101,12 @@ def cache(
             try:
                 # extracts the `id` attribute from the `obj_attr` parameter passed to the `@cache` method
                 _obj = kwargs.get(f"{obj}")
-                _key = await HTTPKeys.generate_key(key=key, config=HTTPCache, obj=_obj, obj_attr=obj_attr)
-                _cache = HTTPCacheBackend(redis=HTTPCache.redis_client, namespace=namespace)
+                _key = await HTTPKeys.generate_key(
+                    key=key, config=HTTPCache, obj=_obj, obj_attr=obj_attr
+                )
+                _cache = HTTPCacheBackend(
+                    redis=HTTPCache.redis_client, namespace=namespace
+                )
                 _request = kwargs.get("request")
                 _response = kwargs.get("response")
 
@@ -118,7 +122,11 @@ def cache(
                 _computed_response = await func(*args, **kwargs)
 
                 # if http request store the response body data
-                _cacheable_response = _computed_response.body if kwargs.get("request", None) else _computed_response
+                _cacheable_response = (
+                    _computed_response.body
+                    if kwargs.get("request", None)
+                    else _computed_response
+                )
 
                 await _cache.set(
                     key=_key,
@@ -159,8 +167,12 @@ def invalidate_cache(
             try:
                 # extracts the `id` attribute from the `obj_attr` giparameter passed to the `@cache` method
                 _obj = kwargs.get(f"{obj}")
-                _keys = await HTTPKeys.generate_keys(keys=keys, config=HTTPCache, obj=_obj, obj_attr=obj_attr)
-                _cache = HTTPCacheBackend(redis=HTTPCache.redis_client, namespace=namespace)
+                _keys = await HTTPKeys.generate_keys(
+                    keys=keys, config=HTTPCache, obj=_obj, obj_attr=obj_attr
+                )
+                _cache = HTTPCacheBackend(
+                    redis=HTTPCache.redis_client, namespace=namespace
+                )
                 await _cache.invalidate_all(keys=_keys)
                 _computed_response = await func(*args, **kwargs)
                 return _computed_response

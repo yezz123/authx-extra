@@ -28,7 +28,9 @@ def request1(argument, middleware):
     assert middleware.skip_session_header_check(request) is True
 
 
-def test_skip_session_header_check_list_with_multiple_headers_and_different_values(middleware):
+def test_skip_session_header_check_list_with_multiple_headers_and_different_values(
+    middleware,
+):
     request2("X-APITEST-Skip", middleware)
     request2("X-Another-Skip-Header", middleware)
 

@@ -151,7 +151,9 @@ class TestCase(unittest.TestCase):
 
         with self.assertLogs("authx_extra.oauth2", level="DEBUG") as cm:
             response = client.get("/", headers={"authorization": f"Bearer {token}"})
-            self.assertEqual(cm.output, [log_message1, "DEBUG:authx_extra.oauth2:Token decoded."])
+            self.assertEqual(
+                cm.output, [log_message1, "DEBUG:authx_extra.oauth2:Token decoded."]
+            )
 
         self.assertEqual(response.status_code, 404)
 
@@ -214,7 +216,9 @@ class TestCase(unittest.TestCase):
         app, key, audience, issuer = case_1()
 
         client = TestClient(app)
-        token = jose.jwt.encode(good_claims(audience, issuer), key, access_token="test_access_token")
+        token = jose.jwt.encode(
+            good_claims(audience, issuer), key, access_token="test_access_token"
+        )
         response = client.get("/", headers={"authorization": f"Bearer {token}"})
 
         self.assertEqual(response.status_code, 404)
@@ -231,7 +235,9 @@ class TestCase(unittest.TestCase):
             self.assertTrue("Signature verification failed" in cm.output[1])
 
         self.assertEqual(response.status_code, 401)
-        self.assertEqual(response.json(), {"message": {"custom": "Signature verification failed."}})
+        self.assertEqual(
+            response.json(), {"message": {"custom": "Signature verification failed."}}
+        )
 
     def test_expired(self):
         app, key, audience, issuer = case_1()
@@ -324,7 +330,9 @@ class TestCase(unittest.TestCase):
             self.assertTrue("Signature verification failed" in cm.output[1])
 
         self.assertEqual(response.status_code, 401)
-        self.assertEqual(response.json(), {"message": {"custom": "Signature verification failed."}})
+        self.assertEqual(
+            response.json(), {"message": {"custom": "Signature verification failed."}}
+        )
 
     def test_public_path(self):
         app, key, audience, issuer = case_1(public_paths={"/"})
@@ -398,7 +406,9 @@ class TestCase(unittest.TestCase):
         self.assertEqual(len(calls_get_keys), 1)
 
     def test_key_refresh_dict(self):
-        app, key, audience, issuer, calls_get_keys = case_3(key_refresh_minutes={"custom": 0})
+        app, key, audience, issuer, calls_get_keys = case_3(
+            key_refresh_minutes={"custom": 0}
+        )
 
         client = TestClient(app)
         token = jose.jwt.encode(good_claims(audience, issuer), key)
@@ -420,7 +430,9 @@ class TestCase(unittest.TestCase):
         client = TestClient(app)
         token = jose.jwt.encode(good_claims(audience, issuer), key)
 
-        with client.websocket_connect("/ws", headers={"authorization": f"Bearer {token}"}) as websocket:
+        with client.websocket_connect(
+            "/ws", headers={"authorization": f"Bearer {token}"}
+        ) as websocket:
             data = websocket.receive_text()
             self.assertEqual(data, "Hello, world!")
 
@@ -438,5 +450,7 @@ class TestCase(unittest.TestCase):
         token = jose.jwt.encode(good_claims(audience, issuer), invalid_key)
 
         with self.assertRaises(WebSocketDisconnect):
-            with client.websocket_connect("/ws", headers={"authorization": f"Bearer {token}"}):
+            with client.websocket_connect(
+                "/ws", headers={"authorization": f"Bearer {token}"}
+            ):
                 pass

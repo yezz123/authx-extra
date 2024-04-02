@@ -20,11 +20,18 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Install Dependencies
-        run: pip install -e .[lint,cache,profiler,oauth2,metrics]
-      - uses: pre-commit/action@v3.0.1
+      - name: setup uv
+        uses: yezz123/setup-uv@v4
         with:
-          extra_args: --all-files --verbose
+          uv-version: "0.1.27"
+          uv-venv: ".venv"
+
+      - name: Install Dependencies
+        run: uv pip install -r requirements/pyproject.txt && uv pip install -r requirements/linting.txt
+
+      - name: Run Pre-commit
+        run: bash scripts/format.sh
+
   test:
     name: test on python ${{ matrix.python-version }}
     runs-on: ubuntu-latest
@@ -50,19 +57,23 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
-      - name: upgrade pip
-        run: pip install --upgrade pip
+      - name: setup uv
+        uses: yezz123/setup-uv@v4
+        with:
+          uv-version: "0.1.27"
+          uv-venv: ".venv"
       - name: Install Dependencies
-        run: pip install -e .[test,cache,profiler,metrics]
-      - name: Freeze dependencies
-        run: pip freeze
-      - name: Test
+        run: uv pip install -r requirements/pyproject.txt && uv pip install -r requirements/optional.txt && uv pip install -r requirements/testing.txt
+      - name: Test Suite
+        run: pytest --cov=authx_extra --cov-report=xml
         env:
           ENV: test
           REDIS_URL: "redis://0.0.0.0:6379"
-        run: pytest --cov=authx_extra --cov=tests --cov-report=html -xv --color=yes --disable-warnings --cov-fail-under=80
       - name: Upload coverage
         uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: ./coverage.xml
 
   # https://github.com/marketplace/actions/alls-green#why used for branch protection checks
   check:

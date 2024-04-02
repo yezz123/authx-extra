@@ -30,7 +30,9 @@ class TestHTTPKeys:
 
         namespace = "test_namespace"
         HTTPCache.init(redis_url=REDIS_URL, namespace=namespace)
-        namespaced_key = await HTTPKeys.generate_key(key="hello.{}", config=HTTPCache, obj=user, obj_attr="id")
+        namespaced_key = await HTTPKeys.generate_key(
+            key="hello.{}", config=HTTPCache, obj=user, obj_attr="id"
+        )
         assert namespaced_key == f"{namespace}:hello.112358"
 
     @pytest.mark.asyncio

@@ -63,7 +63,12 @@ class ProfilerMiddleware:
                 self._profiler.stop()
                 end = time.perf_counter()
                 if self._print_each_request:
-                    print(f"Method: {method}, " f"Path: {path}, " f"Duration: {end - begin}, " f"Status: {status_code}")
+                    print(
+                        f"Method: {method}, "
+                        f"Path: {path}, "
+                        f"Duration: {end - begin}, "
+                        f"Status: {status_code}"
+                    )
                     print(self._profiler.output_text(**self._profiler_kwargs))
 
     async def get_result(self):
@@ -75,7 +80,9 @@ class ProfilerMiddleware:
             if html_name is None:
                 html_name = "authx_profiling_results.html"
 
-            html_code = renderers.HTMLRenderer().render(session=self._profiler.last_session)
+            html_code = renderers.HTMLRenderer().render(
+                session=self._profiler.last_session
+            )
             with codecs.open(html_name, "w", "utf-8") as f:
                 f.write(html_code)
 
@@ -84,6 +91,8 @@ class ProfilerMiddleware:
             if json_name is None:
                 json_name = "authx_profiling_results.json"
 
-            json_code = renderers.JSONRenderer().render(session=self._profiler.last_session)
+            json_code = renderers.JSONRenderer().render(
+                session=self._profiler.last_session
+            )
             with codecs.open(json_name, "w", "utf-8") as f:
                 f.write(json_code)

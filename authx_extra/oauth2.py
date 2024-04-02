@@ -22,7 +22,9 @@ def _get_keys(url_or_keys: typing.Union[str, typing.Any]) -> typing.Any:
         return json.loads(f.read().decode())
 
 
-def _validate_provider(provider_name: str, provider: typing.Dict[str, typing.Any]) -> None:
+def _validate_provider(
+    provider_name: str, provider: typing.Dict[str, typing.Any]
+) -> None:
     mandatory_keys = {"issuer", "keys", "audience"}
     if not mandatory_keys.issubset(set(provider)):
         raise ValueError(
@@ -43,7 +45,9 @@ class MiddlewareOauth2:
         providers: typing.Dict[str, typing.Dict[str, typing.Any]],
         public_paths: typing.Optional[typing.Set[str]] = None,
         get_keys: typing.Optional[typing.Callable[[typing.Any], typing.Any]] = None,
-        key_refresh_minutes: typing.Optional[typing.Union[int, typing.Dict[str, int]]] = None,
+        key_refresh_minutes: typing.Optional[
+            typing.Union[int, typing.Dict[str, int]]
+        ] = None,
     ) -> None:
         self._app = app
         for provider in providers:
@@ -56,10 +60,14 @@ class MiddlewareOauth2:
             self._timeout = {provider: None for provider in providers}
         elif isinstance(key_refresh_minutes, dict):
             self._timeout = {
-                provider: datetime.timedelta(minutes=key_refresh_minutes[provider]) for provider in providers
+                provider: datetime.timedelta(minutes=key_refresh_minutes[provider])
+                for provider in providers
             }
         else:
-            self._timeout = {provider: datetime.timedelta(minutes=key_refresh_minutes) for provider in providers}
+            self._timeout = {
+                provider: datetime.timedelta(minutes=key_refresh_minutes)
+                for provider in providers
+            }
 
         # cached attribute and respective timeout
         self._last_retrieval: typing.Dict[str, datetime.datetime] = {}
@@ -123,14 +131,18 @@ class MiddlewareOauth2:
             return await self._app(scope, receive, send)
 
         # check for authorization header and token on it.
-        if "authorization" in request.headers and request.headers["authorization"].startswith("Bearer "):
+        if "authorization" in request.headers and request.headers[
+            "authorization"
+        ].startswith("Bearer "):
             token = request.headers["authorization"][len("Bearer ") :]
             try:
                 provider, claims = self.claims(token)
                 scope["oauth2-claims"] = claims
                 scope["oauth2-provider"] = provider
             except InvalidToken as e:
-                return await self._prepare_error_response(e.errors, 401, scope, receive, send)
+                return await self._prepare_error_response(
+                    e.errors, 401, scope, receive, send
+                )
         elif "authorization" in request.headers:
             logger.debug('No "Bearer" in authorization header')
             return await self._prepare_error_response(
@@ -160,7 +172,10 @@ class MiddlewareOauth2:
             # we have a key and no timeout => do not refresh
             return False
         # have the key and have timeout => check if we passed the timeout
-        return self._last_retrieval[provider] + self._timeout[provider] < datetime.datetime.utcnow()
+        return (
+            self._last_retrieval[provider] + self._timeout[provider]
+            < datetime.datetime.utcnow()
+        )
 
     def _refresh_keys(self, provider: str) -> None:
         self._keys[provider] = self._get_keys(self._providers[provider]["keys"])
