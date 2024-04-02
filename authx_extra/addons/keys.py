@@ -31,7 +31,12 @@ class HTTPKeys:
         obj_attr: Optional[str] = None,
     ) -> List[str]:
         """Converts a list of raw keys passed by the user to a list of namespaced keys with an optional parameter if passed"""
-        return [await HTTPKeys.generate_key(key=k, config=config, obj=obj, obj_attr=obj_attr) for k in keys]
+        return [
+            await HTTPKeys.generate_key(
+                key=k, config=config, obj=obj, obj_attr=obj_attr
+            )
+            for k in keys
+        ]
 
     @staticmethod
     async def generate_namespaced_key(key: str, config: HTTPCache) -> str:

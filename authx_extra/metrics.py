@@ -68,7 +68,9 @@ def request_count(prefix: str) -> prometheus_client.Counter:
 
 
 @functools.lru_cache()
-def request_time(prefix: str, buckets: typing.Tuple[float, ...]) -> prometheus_client.Histogram:
+def request_time(
+    prefix: str, buckets: typing.Tuple[float, ...]
+) -> prometheus_client.Histogram:
     """Return request time metric for the app prefix (cached/singleton)."""
     return prometheus_client.Histogram(
         f"{prefix}request_duration_seconds",
