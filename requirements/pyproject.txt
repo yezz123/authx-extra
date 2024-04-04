@@ -4,7 +4,7 @@ annotated-types==0.6.0
     # via pydantic
 anyio==4.3.0
     # via starlette
-authx==1.0.0
+authx==1.1.0
 cffi==1.16.0
     # via cryptography
 cryptography==42.0.5

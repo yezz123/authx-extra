@@ -45,7 +45,7 @@ classifiers = [
 ]
 
 dependencies = [
-    "authx==1.0.0",
+    "authx >=1.0.0",
 ]
 
 dynamic = ["version"]
