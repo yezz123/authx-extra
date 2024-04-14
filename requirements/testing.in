@@ -9,4 +9,3 @@ websockets
 uvicorn
 uvloop
 freezegun
-authx
