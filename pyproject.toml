@@ -29,7 +29,7 @@ classifiers = [
     "Framework :: FastAPI",
     "Framework :: AsyncIO",
     "Framework :: Pydantic",
-    "Framework :: Pydantic :: 1",
+    "Framework :: Pydantic :: 2",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.8",
@@ -45,7 +45,9 @@ classifiers = [
 ]
 
 dependencies = [
-    "authx >=1.0.0",
+    "redis>=4.3.3,<5.0.4",
+    "prometheus-client>=0.16.0,<1.0.0",
+    "pyinstrument>=4.1.1,<4.7.0",
 ]
 
 dynamic = ["version"]
@@ -57,17 +59,6 @@ allow-direct-references = true
 Homepage = "https://github.com/yezz123/authx_extra"
 Documentation = "https://authx.yezz.me/installation/#extra-dependencies"
 Funding = 'https://github.com/sponsors/yezz123'
-
-[project.optional-dependencies]
-profiler = [
-    "pyinstrument>=4.1.1,<4.7.0",
-]
-metrics = [
-    "prometheus-client>=0.16.0,<1.0.0",
-]
-cache = [
-    "redis>=4.3.3,<5.0.4",
-]
 
 [tool.hatch.version]
 path = "authx_extra/__init__.py"
