@@ -25,14 +25,14 @@ HTTPCache.init(redis_url=REDIS_URL, namespace="test_namespace")
 @app.get("/b/home")
 @cache(key="b.home", ttl_in_seconds=180)
 async def home(request: Request, response: Response):
-    return JSONResponse({"page": "home", "datetime": str(datetime.utcnow())})
+    return JSONResponse({"page": "home", "datetime": str(datetime.now(datetime.UTC))})
 
 
 @app.get("/b/logged-in")
 @cache(key="b.logged_in.{}", obj="user", obj_attr="id")
 async def logged_in(request: Request, response: Response, user=user):
     return JSONResponse(
-        {"page": "home", "user": user.id, "datetime": str(datetime.utcnow())}
+        {"page": "home", "user": user.id, "datetime": str(datetime.now(datetime.UTC))}
     )
 
 
@@ -44,7 +44,7 @@ async def my_ttl_callable():
 @cache(key="b.ttl_callable_expiry", ttl_func=my_ttl_callable)
 async def path_with_ttl_callable(request: Request, response: Response):
     return JSONResponse(
-        {"page": "path_with_ttl_callable", "datetime": str(datetime.utcnow())}
+        {"page": "path_with_ttl_callable", "datetime": str(datetime.now(datetime.UTC))}
     )
 
 
@@ -54,7 +54,7 @@ async def path_with_ttl_callable(request: Request, response: Response):
 )
 async def post_logged_in(request: Request, response: Response, user=user):
     return JSONResponse(
-        {"page": "home", "user": user.id, "datetime": str(datetime.utcnow())}
+        {"page": "home", "user": user.id, "datetime": str(datetime.now(datetime.UTC))}
     )
 
 
@@ -62,7 +62,11 @@ async def post_logged_in(request: Request, response: Response, user=user):
 @cache(key="b.profile.{}", obj="user", obj_attr="id")
 async def logged_in(request: Request, response: Response, user=user):
     return JSONResponse(
-        {"page": "profile", "user": user.id, "datetime": str(datetime.utcnow())}
+        {
+            "page": "profile",
+            "user": user.id,
+            "datetime": str(datetime.now(datetime.UTC)),
+        }
     )
 
 
@@ -75,7 +79,7 @@ async def logged_in(request: Request, response: Response, user=user):
 )
 async def invalidate_multiple(request: Request, response: Response, user=user):
     return JSONResponse(
-        {"page": "invalidate_multiple", "datetime": str(datetime.utcnow())}
+        {"page": "invalidate_multiple", "datetime": str(datetime.now(datetime.UTC))}
     )
 
 
