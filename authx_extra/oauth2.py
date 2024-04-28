@@ -174,11 +174,11 @@ class MiddlewareOauth2:
         # have the key and have timeout => check if we passed the timeout
         return self._last_retrieval[provider] + self._timeout[
             provider
-        ] < datetime.datetime.now(datetime.UTC)
+        ] < datetime.datetime.now(datetime.timezone.utc)
 
     def _refresh_keys(self, provider: str) -> None:
         self._keys[provider] = self._get_keys(self._providers[provider]["keys"])
-        self._last_retrieval[provider] = datetime.datetime.now(datetime.UTC)
+        self._last_retrieval[provider] = datetime.datetime.now(datetime.timezone.utc)
 
     def _provider_keys(self, provider: str) -> typing.Any:
         if self._should_refresh(provider):

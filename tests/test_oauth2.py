@@ -90,8 +90,9 @@ def case_3(**kwargs):
 
 def good_claims(audience: str, issuer: str):
     return {
-        "exp": datetime.datetime.now(datetime.UTC) + datetime.timedelta(seconds=3600),
-        "iat": datetime.datetime.now(datetime.UTC),
+        "exp": datetime.datetime.now(datetime.timezone.utc)
+        + datetime.timedelta(seconds=3600),
+        "iat": datetime.datetime.now(datetime.timezone.utc),
         "aud": audience,
         "iss": issuer,
     }
@@ -198,9 +199,9 @@ class TestCase(unittest.TestCase):
 
         client = TestClient(app)
         claims = {
-            "exp": datetime.datetime.now(datetime.UTC)
+            "exp": datetime.datetime.now(datetime.timezone.utc)
             + datetime.timedelta(seconds=3600),
-            "iat": datetime.datetime.now(datetime.UTC),
+            "iat": datetime.datetime.now(datetime.timezone.utc),
             "aud": audience,
             "iss": issuer,
             "custom": "a custom claim",
@@ -246,9 +247,9 @@ class TestCase(unittest.TestCase):
         client = TestClient(app)
         token = jose.jwt.encode(
             {
-                "exp": datetime.datetime.now(datetime.UTC)
+                "exp": datetime.datetime.now(datetime.timezone.utc)
                 - datetime.timedelta(seconds=1800),
-                "iat": datetime.datetime.now(datetime.UTC)
+                "iat": datetime.datetime.now(datetime.timezone.utc)
                 - datetime.timedelta(seconds=3600),
                 "aud": audience,
                 "iss": issuer,
@@ -274,9 +275,9 @@ class TestCase(unittest.TestCase):
         client = TestClient(app)
         token = jose.jwt.encode(
             {
-                "exp": datetime.datetime.now(datetime.UTC)
+                "exp": datetime.datetime.now(datetime.timezone.utc)
                 + datetime.timedelta(seconds=3600),
-                "iat": datetime.datetime.now(datetime.UTC),
+                "iat": datetime.datetime.now(datetime.timezone.utc),
                 "aud": "wrong-audience",
                 "iss": issuer,
             },
@@ -301,9 +302,9 @@ class TestCase(unittest.TestCase):
         client = TestClient(app)
         token = jose.jwt.encode(
             {
-                "exp": datetime.datetime.now(datetime.UTC)
+                "exp": datetime.datetime.now(datetime.timezone.utc)
                 + datetime.timedelta(seconds=3600),
-                "iat": datetime.datetime.now(datetime.UTC),
+                "iat": datetime.datetime.now(datetime.timezone.utc),
                 "aud": audience,
                 "iss": "wrong-issuer",
             },
