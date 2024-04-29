@@ -13,7 +13,7 @@ cryptography==42.0.5
     # via pyjwt
 ecdsa==0.19.0
     # via python-jose
-fastapi==0.110.1
+fastapi==0.110.2
     # via authx
 idna==3.7
     # via anyio
@@ -24,12 +24,12 @@ pyasn1==0.6.0
     #   rsa
 pycparser==2.22
     # via cffi
-pydantic==2.7.0
+pydantic==2.7.1
     # via
     #   authx
     #   fastapi
     #   pydantic-settings
-pydantic-core==2.18.1
+pydantic-core==2.18.2
     # via pydantic
 pydantic-settings==2.2.1
     # via authx
@@ -44,7 +44,7 @@ python-jose==3.3.0
     # via authx
 pytz==2024.1
     # via authx
-redis==5.0.3
+redis==5.0.4
 rsa==4.9
     # via python-jose
 six==1.16.0
