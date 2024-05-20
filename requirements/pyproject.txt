@@ -20,6 +20,7 @@ click==8.1.7
     # via
     #   typer
     #   uvicorn
+    # via cryptography
 cryptography==42.0.7
     # via pyjwt
 dnspython==2.6.1
