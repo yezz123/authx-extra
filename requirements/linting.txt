@@ -9,6 +9,7 @@ filelock==3.14.0
 identify==2.5.36
     # via pre-commit
 mypy==1.10.0
+    # via -r requirements/linting.in
 mypy-extensions==1.0.0
     # via mypy
 nodeenv==1.8.0
@@ -16,11 +17,11 @@ nodeenv==1.8.0
 platformdirs==4.2.2
     # via virtualenv
 pre-commit==3.7.1
+    # via -r requirements/linting.in
 pyyaml==6.0.1
     # via pre-commit
-ruff==0.4.4
-setuptools==69.5.1
-    # via nodeenv
+ruff==0.4.5
+    # via -r requirements/linting.in
 typing-extensions==4.11.0
     # via mypy
 virtualenv==20.26.2
