@@ -46,9 +46,6 @@ classifiers = [
 
 dependencies = [
     "authx>=1.1.0,<2.0.0",
-    "redis>=4.3.3,<5.0.6",
-    "prometheus-client>=0.16.0,<1.0.0",
-    "pyinstrument>=4.1.1,<4.7.0",
 ]
 
 dynamic = ["version"]
@@ -60,6 +57,17 @@ allow-direct-references = true
 Homepage = "https://github.com/yezz123/authx_extra"
 Documentation = "https://authx.yezz.me/installation/#extra-dependencies"
 Funding = 'https://github.com/sponsors/yezz123'
+
+[project.optional-dependencies]
+redis = [
+    "redis>=4.3.3,<5.0.6",
+]
+profiler = [
+    "pyinstrument>=4.1.1,<4.7.0",
+]
+prometheus = [
+    "prometheus-client>=0.16.0,<1.0.0",
+]
 
 [tool.hatch.version]
 path = "authx_extra/__init__.py"
