@@ -4,7 +4,8 @@ annotated-types==0.7.0
     # via pydantic
 anyio==4.4.0
     # via starlette
-authx==1.2.0
+authx==1.2.1
+    # via -r requirements/pyproject.in
 cffi==1.16.0
     # via cryptography
 cryptography==42.0.8
@@ -16,6 +17,7 @@ fastapi-slim==0.111.0
 idna==3.7
     # via anyio
 prometheus-client==0.20.0
+    # via -r requirements/pyproject.in
 pyasn1==0.6.0
     # via
     #   python-jose
@@ -32,7 +34,8 @@ pydantic-core==2.18.4
 pydantic-settings==2.3.4
     # via authx
 pyinstrument==4.6.2
-pyjwt==2.8.0
+    # via -r requirements/pyproject.in
+pyjwt[crypto]==2.8.0
     # via authx
 python-dateutil==2.9.0.post0
     # via authx
@@ -43,6 +46,7 @@ python-jose==3.3.0
 pytz==2024.1
     # via authx
 redis==5.0.5
+    # via -r requirements/pyproject.in
 rsa==4.9
     # via python-jose
 six==1.16.0
