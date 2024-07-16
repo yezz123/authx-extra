@@ -45,7 +45,7 @@ python-jose==3.3.0
     # via authx
 pytz==2024.1
     # via authx
-redis==5.0.5
+redis==5.0.7
     # via -r requirements/pyproject.in
 rsa==4.9
     # via python-jose
