@@ -1,15 +1,12 @@
-import os
 from datetime import datetime
 
-import redis
+import pytest
 from fastapi import FastAPI, Request, Response
 from fastapi.responses import JSONResponse
 from fastapi.testclient import TestClient
+from testcontainers.redis import RedisContainer
 
 from authx_extra.cache import HTTPCache, cache, invalidate_cache
-
-REDIS_URL = os.environ.get("REDIS_URL", "redis://localhost:6379/2")
-redis_client = redis.from_url(REDIS_URL)
 
 
 class User:
@@ -19,7 +16,18 @@ class User:
 user = User()
 app = FastAPI()
 
-HTTPCache.init(redis_url=REDIS_URL, namespace="test_namespace")
+
+@pytest.fixture(scope="module")
+def redis_container():
+    with RedisContainer() as redis:
+        yield redis
+
+
+@pytest.fixture(scope="function")
+def app_client(redis_container):
+    redis_url = redis_container.get_connection_url()
+    HTTPCache.init(redis_url=redis_url, namespace="test_namespace")
+    yield TestClient(app)
 
 
 @app.get("/b/home")
@@ -79,13 +87,13 @@ async def invalidate_multiple(request: Request, response: Response, user=user):
     )
 
 
-def test_invalidate_multiple():
-    client = TestClient(app)
+def test_invalidate_multiple(app_client, redis_container):
+    redis_client = redis_container.get_client()
     redis_client.flushdb()
-    response = extracted_result(client, "/b/logged-in")
-    response2 = extracted_result(client, "/b/profile")
+    response = extracted_result(app_client, "/b/logged-in")
+    response2 = extracted_result(app_client, "/b/profile")
     assert response2.headers["Cache-hit"] == "true"
-    response3 = client.post(
+    response3 = app_client.post(
         "/b/invalidate_multiple",
         headers={
             "Content-Type": "application/json",
@@ -116,10 +124,10 @@ def extracted_result(client, arg):
     return result
 
 
-def test_home_cached_response():
-    client = TestClient(app)
+def test_home_cached_response(app_client, redis_container):
+    redis_client = redis_container.get_client()
     redis_client.flushdb()
-    response = client.get(
+    response = app_client.get(
         "/b/home",
         headers={
             "Content-Type": "application/json",
@@ -127,7 +135,7 @@ def test_home_cached_response():
         },
     )
     assert response.status_code == 200
-    response = client.get(
+    response = app_client.get(
         "/b/home",
         headers={
             "Content-Type": "application/json",
@@ -137,12 +145,10 @@ def test_home_cached_response():
     assert response.headers["Cache-hit"] == "true"
 
 
-def test_with_ttl_callable():
-    import pytest
-
-    client = TestClient(app)
+def test_with_ttl_callable(app_client, redis_container):
+    redis_client = redis_container.get_client()
     redis_client.flushdb()
-    response = client.get(
+    response = app_client.get(
         "/b/ttl_callable",
         headers={
             "Content-Type": "application/json",
@@ -150,7 +156,7 @@ def test_with_ttl_callable():
         },
     )
     assert response.status_code == 200
-    response = client.get(
+    response = app_client.get(
         "/b/ttl_callable",
         headers={
             "Content-Type": "application/json",
@@ -166,11 +172,11 @@ def test_with_ttl_callable():
     )
 
 
-def test_home_cached_with_current_user():
-    client = TestClient(app)
+def test_home_cached_with_current_user(app_client, redis_container):
+    redis_client = redis_container.get_client()
     redis_client.flushdb()
 
-    response = client.get(
+    response = app_client.get(
         "/b/logged-in",
         headers={
             "Content-Type": "application/json",
@@ -179,7 +185,7 @@ def test_home_cached_with_current_user():
     )
     assert response.status_code == 200
 
-    response = client.get(
+    response = app_client.get(
         "/b/logged-in",
         headers={
             "Content-Type": "application/json",
@@ -192,11 +198,11 @@ def test_home_cached_with_current_user():
     assert value is not None
 
 
-def test_cache_invalidation():
-    client = TestClient(app)
+def test_cache_invalidation(app_client, redis_container):
+    redis_client = redis_container.get_client()
     redis_client.flushdb()
 
-    response = client.get(
+    response = app_client.get(
         "/b/logged-in",
         headers={
             "Content-Type": "application/json",
@@ -205,7 +211,7 @@ def test_cache_invalidation():
     )
     assert response.status_code == 200
 
-    response = client.get(
+    response = app_client.get(
         "/b/logged-in",
         headers={
             "Content-Type": "application/json",
@@ -217,7 +223,7 @@ def test_cache_invalidation():
     value = redis_client.get("test_namespace:b.logged_in.112358")
     assert value is not None
 
-    client.post(
+    app_client.post(
         "/b/logged-in",
         headers={
             "Content-Type": "application/json",
@@ -225,7 +231,7 @@ def test_cache_invalidation():
         },
     )
 
-    response = client.get(
+    response = app_client.get(
         "/b/logged-in",
         headers={
             "Content-Type": "application/json",
