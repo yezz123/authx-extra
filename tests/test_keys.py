@@ -1,51 +1,57 @@
-import os
-
 import pytest
 import redis
+from testcontainers.redis import RedisContainer
 
 from authx_extra.addons.keys import HTTPKeys
 from authx_extra.cache import HTTPCache
 
-REDIS_URL = os.environ.get("REDIS_URL", "redis://localhost:6379/3")
-redis_client = redis.Redis.from_url(REDIS_URL)
-
 
 class TestHTTPKeys:
+    @pytest.fixture(scope="class")
+    def redis_container(self):
+        with RedisContainer() as redis:
+            yield redis
+
+    @pytest.fixture(scope="function")
+    def redis_client(self, redis_container):
+        redis_url = redis_container.get_connection_url()
+        client = redis.Redis.from_url(redis_url)
+        yield client
+        client.flushdb()
+
     @pytest.mark.asyncio
-    async def test_generate_keys(self):
-        redis_client.flushdb()
+    async def test_generate_keys(self, redis_client):
         namespace = "test_namespace"
-        HTTPCache.init(redis_url=REDIS_URL, namespace=namespace)
+        redis_url = redis_client.connection_pool.connection_kwargs["url"]
+        HTTPCache.init(redis_url=redis_url, namespace=namespace)
         namespaced_key = await HTTPKeys.generate_key(key="hello", config=HTTPCache)
         assert namespaced_key == f"{namespace}:hello"
 
     @pytest.mark.asyncio
-    async def test_generate_key_with_attr(self):
-        redis_client.flushdb()
-
+    async def test_generate_key_with_attr(self, redis_client):
         class User:
             id: str = "112358"
 
         user = User()
 
         namespace = "test_namespace"
-        HTTPCache.init(redis_url=REDIS_URL, namespace=namespace)
+        redis_url = redis_client.connection_pool.connection_kwargs["url"]
+        HTTPCache.init(redis_url=redis_url, namespace=namespace)
         namespaced_key = await HTTPKeys.generate_key(
             key="hello.{}", config=HTTPCache, obj=user, obj_attr="id"
         )
         assert namespaced_key == f"{namespace}:hello.112358"
 
     @pytest.mark.asyncio
-    async def test_generate_keys_with_attr(self):
-        redis_client.flushdb()
-
+    async def test_generate_keys_with_attr(self, redis_client):
         class User:
             id: str = "112358"
 
         user = User()
 
         namespace = "test_namespace"
-        HTTPCache.init(redis_url=REDIS_URL, namespace=namespace)
+        redis_url = redis_client.connection_pool.connection_kwargs["url"]
+        HTTPCache.init(redis_url=redis_url, namespace=namespace)
         namespaced_keys = await HTTPKeys.generate_keys(
             keys=["hello.{}", "foo.{}"], config=HTTPCache, obj=user, obj_attr="id"
         )
