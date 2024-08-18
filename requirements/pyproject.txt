@@ -73,7 +73,7 @@ pydantic-settings==2.3.4
     # via authx
 pygments==2.18.0
     # via rich
-pyinstrument==4.6.2
+pyinstrument==4.7.2
     # via -r requirements/pyproject.in
 pyjwt[crypto]==2.8.0
     # via authx
@@ -91,7 +91,7 @@ pytz==2024.1
     # via authx
 pyyaml==6.0.1
     # via uvicorn
-redis==5.0.7
+redis==5.0.8
     # via -r requirements/pyproject.in
 rich==13.7.1
     # via typer
