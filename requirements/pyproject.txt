@@ -117,9 +117,9 @@ typing-extensions==4.12.2
     #   pydantic
     #   pydantic-core
     #   typer
-uvicorn[standard]==0.30.5
+uvicorn[standard]==0.30.6
     # via fastapi
-uvloop==0.19.0
+uvloop==0.20.0
     # via uvicorn
 watchfiles==0.22.0
     # via uvicorn
