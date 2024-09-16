@@ -39,7 +39,7 @@ httpcore==1.0.5
     # via httpx
 httptools==0.6.1
     # via uvicorn
-httpx==0.27.0
+httpx==0.27.2
     # via fastapi
 idna==3.7
     # via
@@ -73,7 +73,7 @@ pydantic-settings==2.3.4
     # via authx
 pygments==2.18.0
     # via rich
-pyinstrument==4.7.2
+pyinstrument==4.7.3
     # via -r requirements/pyproject.in
 pyjwt[crypto]==2.8.0
     # via authx
@@ -123,5 +123,5 @@ uvloop==0.20.0
     # via uvicorn
 watchfiles==0.22.0
     # via uvicorn
-websockets==12.0
+websockets==13.0.1
     # via uvicorn
