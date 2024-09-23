@@ -54,7 +54,7 @@ markupsafe==2.1.5
     # via jinja2
 mdurl==0.1.2
     # via markdown-it-py
-prometheus-client==0.20.0
+prometheus-client==0.21.0
     # via -r requirements/pyproject.in
 pyasn1==0.6.0
     # via
@@ -123,5 +123,5 @@ uvloop==0.20.0
     # via uvicorn
 watchfiles==0.22.0
     # via uvicorn
-websockets==13.0.1
+websockets==13.1
     # via uvicorn
