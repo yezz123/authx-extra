@@ -37,6 +37,7 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: 3 :: Only",
     "Topic :: Internet :: WWW/HTTP :: Session",
     "Topic :: Software Development :: Libraries :: Python Modules",
@@ -46,8 +47,10 @@ classifiers = [
 
 dependencies = [
     "authx>=1.1.0,<2.0.0",
+    "redis>=5.0.7,<5.1.2",
+    "pyinstrument>=4.1.1,<4.8.0",
+    "prometheus-client>=0.16.0,<1.0.0",
 ]
-
 dynamic = ["version"]
 
 [tool.hatch.metadata]
@@ -58,16 +61,28 @@ Homepage = "https://github.com/yezz123/authx_extra"
 Documentation = "https://authx.yezz.me/installation/#extra-dependencies"
 Funding = 'https://github.com/sponsors/yezz123'
 
-[project.optional-dependencies]
-redis = [
-    "redis>=5.0.7,<5.1.2",
+[tool.uv]
+dev-dependencies = [
+    'pytest',
+    'pytest-asyncio',
+    'pytest-cov',
+    'httpx',
+    'requests',
+    'SQLAlchemy',
+    'itsdangerous',
+    'websockets',
+    'freezegun',
+    'async-asgi-testclient',
+    'pre-commit',
+    'mypy',
+    'black',
+    'pyupgrade',
+    'ruff',
+    'types-python-dateutil',
+    'types-pytz',
+    'codespell',
 ]
-profiler = [
-    "pyinstrument>=4.1.1,<4.8.0",
-]
-prometheus = [
-    "prometheus-client>=0.16.0,<1.0.0",
-]
+
 
 [tool.hatch.version]
 path = "authx_extra/__init__.py"
@@ -135,3 +150,8 @@ filterwarnings = [
     'error',
     'ignore::DeprecationWarning',
 ]
+
+
+[tool.codespell]
+skip = '.git,env*,__pycache__,.venv'
+ignore-words-list = 'ines,ser,assertIn'
