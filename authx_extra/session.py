@@ -200,7 +200,7 @@ class SessionMiddleware(BaseHTTPMiddleware):
                     )
                 else:
                     self.logger.info(
-                        f"[session_id:'{session_id}'] Session cookie and Store is available! set session_mgr to reqeust.state.{self.session_object}"
+                        f"[session_id:'{session_id}'] Session cookie and Store is available! set session_mgr to request.state.{self.session_object}"
                     )
 
                     setattr(
