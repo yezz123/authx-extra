@@ -48,7 +48,7 @@ classifiers = [
 dependencies = [
     "authx>=1.1.0,<2.0.0",
     "redis>=5.0.7,<5.1.2",
-    "pyinstrument>=4.1.1,<4.8.0",
+    "pyinstrument>=4.1.1,<5.1.0",
     "prometheus-client>=0.16.0,<1.0.0",
 ]
 dynamic = ["version"]
