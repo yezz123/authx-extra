@@ -47,9 +47,10 @@ class SessionMiddleware(BaseHTTPMiddleware):
         session_object="session",
         skip_session_header=None,
         logger=None,
+        cookie_path="/",  # Added cookie_path parameter
     ):
         super().__init__(app)
-
+        self.cookie_path = cookie_path  # Store cookie_path
         self.skip_session_header = skip_session_header
         self.http_only = http_only
         self.max_age = max_age
@@ -73,7 +74,9 @@ class SessionMiddleware(BaseHTTPMiddleware):
             self.logger = ConsoleLogger()
 
         self.logger.debug(
-            f"Session Middleware initialized http_only:{http_only} secure:{secure} session_key:'{session_object}' session_cookie_name:{session_cookie} store:{store}"
+            f"Session Middleware initialized http_only:{http_only} secure:{secure} "
+            f"session_key:'{session_object}' session_cookie_name:{session_cookie} "
+            f"store:{store} cookie_path:{cookie_path}"
         )
 
     def create_session_cookie(self, session_id):
@@ -94,6 +97,12 @@ class SessionMiddleware(BaseHTTPMiddleware):
 
         self.logger.debug(
             f"[session_id:'{session_id}'] Creating new Cookie object... cookie[{self.session_cookie_name}]"
+        )
+
+        # Set cookie path
+        cookie[self.session_cookie_name]["path"] = self.cookie_path
+        self.logger.debug(
+            f"[session_id:'{session_id}'] cookie[{self.session_cookie_name}]['path']={self.cookie_path}"
         )
 
         if self.http_only:

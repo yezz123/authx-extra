@@ -271,3 +271,79 @@ async def test_dispatch_should_not_skip_session_management_without_skip_heade1r(
     response = await middleware.dispatch(request, call_next)
     print(f"res:{response}")
     assert hasattr(request.state, "session")
+
+
+def test_cookie_path_setting():
+    async def test_route(request):
+        return PlainTextResponse("Hello, world!")
+
+    app = Starlette()
+    app.add_route("/", test_route)
+
+    custom_path = "/api"
+    app.add_middleware(
+        SessionMiddleware,
+        secret_key="test-secret",
+        store=MemoryIO(),
+        cookie_path=custom_path,
+        session_cookie="sid",
+    )
+
+    client = TestClient(app)
+    response = client.get("/")
+
+    assert "sid" in response.cookies
+    assert f"Path={custom_path}" in response.headers["Set-Cookie"]
+
+
+def test_default_cookie_path():
+    async def test_route(request):
+        return PlainTextResponse("Hello, world!")
+
+    app = Starlette()
+    app.add_route("/", test_route)
+
+    app.add_middleware(
+        SessionMiddleware,
+        secret_key="test-secret",
+        store=MemoryIO(),
+        session_cookie="sid",
+    )
+
+    client = TestClient(app)
+    response = client.get("/")
+
+    assert "sid" in response.cookies
+    assert "Path=/" in response.headers["Set-Cookie"]
+
+
+def test_cookie_path_session_persistence():
+    async def test_route(request):
+        session = request.state.session.get_session()
+        if "counter" not in session:
+            session["counter"] = 0
+        session["counter"] += 1
+        return PlainTextResponse(f"Counter: {session['counter']}")
+
+    app = Starlette()
+    app.add_route("/api/count", test_route)
+
+    app.add_middleware(
+        SessionMiddleware,
+        secret_key="test-secret",
+        store=MemoryIO(),
+        cookie_path="/api",
+        session_cookie="sid",
+        secure=False,
+    )
+
+    client = TestClient(app)
+
+    # First request
+    response = client.get("/api/count")
+    assert response.text == "Counter: 1"
+    assert "Path=/api" in response.headers["Set-Cookie"]
+
+    # Second request should increment counter due to proper path
+    response = client.get("/api/count")
+    assert response.text == "Counter: 2"
