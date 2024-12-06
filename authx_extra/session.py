@@ -13,21 +13,21 @@ class SessionIntegration:
         self.session_id = session_id
         self.session_save = session_save
 
-    def get_session(self):
+    async def get_session(self):
         """Get the session store."""
         return self.session_store
 
-    def clear_session(self):
+    async def clear_session(self):
         """Clear the session store."""
         self.session_store.clear()
 
-    def get_session_id(self):
+    async def get_session_id(self):
         """Get the session ID."""
         return self.session_id
 
-    def save_session(self):
+    async def save_session(self):
         """Save the session store."""
-        self.session_save()
+        await self.session_save()
 
 
 class SessionMiddleware(BaseHTTPMiddleware):
@@ -198,7 +198,7 @@ class SessionMiddleware(BaseHTTPMiddleware):
             if decoded_dict is not None:
                 self.logger.debug("Cookie signature validation success")
                 session_id = decoded_dict.get(self.session_cookie_name)
-                session_store = self.session_store.get_store(session_id)
+                session_store = await self.session_store.get_store(session_id)
 
                 if session_store is None:
                     self.logger.info(
@@ -255,7 +255,7 @@ class SessionMiddleware(BaseHTTPMiddleware):
             SimpleCookie: The signed session cookie.
         """
         session_id = str(uuid.uuid4())
-        session_store = self.session_store.create_store(session_id)
+        session_store = await self.session_store.create_store(session_id)
         self.logger.debug(
             f"[session_id:'{session_id}'(NEW)] New session_id and store for session_id created."
         )
@@ -273,6 +273,6 @@ class SessionMiddleware(BaseHTTPMiddleware):
         )
         setattr(request.state, self.session_object, fast_session_obj)
 
-        self.session_store.gc()
+        await self.session_store.gc()
 
         return self.create_session_cookie(session_id)
