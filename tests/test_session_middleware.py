@@ -37,7 +37,7 @@ def test_create_session_id_and_store():
 
 def test_session_counter_increment():
     async def test_route(request):
-        session = request.state.session.get_session()
+        session = await request.state.session.get_session()
         if "test_counter" not in session:
             session["test_counter"] = 0
 
@@ -78,7 +78,7 @@ def test_session_counter_increment():
 
 def test_session_cookie_expiry():
     async def test_route(request):
-        session = request.state.session.get_session()
+        session = await request.state.session.get_session()
 
         if "test_counter" not in session:
             session["test_counter"] = 0
@@ -131,7 +131,7 @@ def test_session_cookie_not_persisted_with_secure_option():
 
     @app.route("/")
     async def test_route(request):
-        session = request.state.session.get_session()
+        session = await request.state.session.get_session()
         if "test_counter" not in session:
             session["test_counter"] = 0
 
@@ -156,7 +156,7 @@ def test_session_cookie_not_persisted_with_secure_option():
 
 def test_check_httponly_flag_in_cookie():
     async def test_route(request):
-        session = request.state.session.get_session()
+        session = await request.state.session.get_session()
         if "test_counter" not in session:
             session["test_counter"] = 0
 
@@ -188,7 +188,7 @@ def test_check_httponly_flag_in_cookie():
 
 def test_check_no_httponly_flag_in_cookie():
     async def test_route(request):
-        session = request.state.session.get_session()
+        session = await request.state.session.get_session()
         if "test_counter" not in session:
             session["test_counter"] = 0
 
@@ -245,7 +245,7 @@ async def test_dispatch_should_skip_session_management_with_skip_header():
 
 
 @pytest.mark.asyncio
-async def test_dispatch_should_not_skip_session_management_without_skip_heade1r():
+async def test_dispatch_should_not_skip_session_management_without_skip_header():
     app = Mock(return_value=Response("OK"))
     middleware = SessionMiddleware(
         app=app,
@@ -319,7 +319,7 @@ def test_default_cookie_path():
 
 def test_cookie_path_session_persistence():
     async def test_route(request):
-        session = request.state.session.get_session()
+        session = await request.state.session.get_session()
         if "counter" not in session:
             session["counter"] = 0
         session["counter"] += 1
