@@ -1,7 +1,8 @@
 from time import time
 
 import pytest
-from authx._internal import MemoryIO
+
+from authx_extra.extra._memory import MemoryIO
 
 
 @pytest.fixture
