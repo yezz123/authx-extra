@@ -2,13 +2,13 @@ import time
 from unittest.mock import Mock
 
 import pytest
-from authx._internal import MemoryIO
 from starlette.applications import Starlette
 from starlette.requests import Request
 from starlette.responses import PlainTextResponse, Response
 from starlette.routing import Route
 from starlette.testclient import TestClient
 
+from authx_extra.extra._memory import MemoryIO
 from authx_extra.session import SessionMiddleware
 
 

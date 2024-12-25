@@ -1,10 +1,12 @@
 import uuid
 from http.cookies import SimpleCookie
 
-from authx._internal import MemoryIO, SignatureSerializer
+from authx._internal import SignatureSerializer
 from starlette.middleware.base import BaseHTTPMiddleware, RequestResponseEndpoint
 from starlette.requests import Request
 from starlette.responses import Response
+
+from authx_extra.extra._memory import MemoryIO
 
 
 class SessionIntegration:
