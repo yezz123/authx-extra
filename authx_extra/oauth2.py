@@ -57,7 +57,7 @@ class MiddlewareOauth2:
         self._public_paths = public_paths or set()
 
         if key_refresh_minutes is None:
-            self._timeout = {provider: None for provider in providers}
+            self._timeout = dict.fromkeys(providers)
         elif isinstance(key_refresh_minutes, dict):
             self._timeout = {
                 provider: datetime.timedelta(minutes=key_refresh_minutes[provider])
